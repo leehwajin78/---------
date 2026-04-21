@@ -148,7 +148,7 @@
 | EXT-01 | **Google Gemini API** | AI 마스터 브리프 생성, 브랜드 진단 리포트 생성 | HTTPS (TLS 1.3) | Rate: RPM/TPM Tier 기반, Context: **1M+ tokens**, Cost: Flash ~$0.075/1M input | Supabase에 사전 캐싱된 **샘플 진단 리포트 템플릿**(업종별 3종) 반환 + Fallback 메시지 출력. 브리프 생성은 수동 대응 (SLA 4시간) 및 Vercel AI SDK의 provider 자동 전환 (fallback) 적용 |
 | EXT-02 | **Supabase** | 리드 DB (PostgreSQL) + Storage. DB 접근은 Prisma ORM 경유, App-level 접근 제어 | HTTPS (Prisma via TCP/HTTP) | Free 티어: 500MB DB, 1GB Storage, 50K MAU | 로컬 JSON 파일 기반 **임시 리드 저장소**에 기록 후, Supabase 복구 시 일괄 동기화 (Batch Sync). 관리자 콘솔에 "오프라인 모드" 표시. |
 | EXT-03 | **Vercel** | 호스팅, Serverless Functions, Edge CDN | HTTPS | Hobby: 실행 시간 ≤ 60초, 메모리 1024MB | Vercel 전체 장애 시 대응 불가 (호스팅 의존). 장애 감지 → Slack 알림 + 고객 안내 메일 발송. 사전에 **정적 HTML 랜딩페이지** 백업본을 별도 스토리지에 준비. |
-| EXT-04 | **Google Analytics 4** | 페이지뷰·이벤트 트래킹, 전환 분석 | HTTPS (gtag.js) | GDPR 동의 배너 필요 | GA4 장애 시 운영자가 **수동으로 이벤트 로그를 기록**하여 전환 데이터 보존. GA4 복구 후 수동 대조. *(Phase 2: `event_logs` 테이블 자동 기록)* |
+| EXT-04 | **Google Analytics 4** | 페이지뷰·이벤트 트래킹, 전환 분석 | HTTPS (gtag.js) | GDPR 동의 배너 필요 | GA4 장애 시 **Supabase `event_logs` 테이블**에 이벤트(page_view, cta_click 등)를 직접 기록하여 전환 데이터 보존. GA4 복구 후 수동 대조. |
 | EXT-05 | **Typeform** | NPS 설문, 월말 고객 자가 보고 | HTTPS (Webhook) | 무료 플랜 제약 내 | Typeform 장애 시 **Google Forms 대체 설문 링크** 사전 준비. 수집 데이터는 운영자가 수동으로 Supabase에 입력. |
 | EXT-06 | **Slack** | 운영 알림 (오류, 비용, 리드 적재 실패) | HTTPS (Webhook) | Incoming Webhook | Slack 장애 시 **운영자 이메일(대표 개인 메일)**로 동일 알림 자동 발송. Vercel Functions 내 이메일 Fallback 로직 사전 구현. |
 
@@ -283,7 +283,7 @@ flowchart LR
         end
         subgraph UC_Auto ["Automated Zone"]
             UC13["UC-13\n불성실 응답 필터링"]
-            UC14["UC-14\n비용 차단 ($100 하드캡)\n*(Phase 2: 자동화)*"]
+            UC14["UC-14\n비용 자동 차단 ($100 하드캡)"]
             UC15["UC-15\n모니터링 알림 발송"]
         end
     end
@@ -328,7 +328,7 @@ flowchart LR
 | UC-11 | 리테이너 구독 관리 | 운영자 | REQ-FUNC-026 |
 | UC-12 | 녹취 텍스트 → B2B 카피 변환 | 운영자, Gemini API | REQ-FUNC-014, 015 |
 | UC-13 | 불성실 응답 필터링 | 시스템 (자동) | REQ-FUNC-009, REQ-NF-023 |
-| UC-14 | 비용 차단 ($100 하드캡) *(MVP: 수동 모니터링, Phase 2: 자동화)* | 시스템 (수동→자동) | REQ-NF-016 |
+| UC-14 | 비용 자동 차단 ($100 하드캡) | 시스템 (자동) | REQ-NF-016 |
 | UC-15 | 모니터링 알림 발송 | 시스템 (자동) | REQ-NF-018, 019, 020 |
 
 ### 3.6 System Architecture (Component Diagram)
@@ -399,7 +399,7 @@ flowchart TB
 | **Next.js App Router** | Next.js 13+ (React) | 단일 풀스택 프레임워크 (Pages, API, Actions 통합) | CON-07 |
 | **Route / Actions** | Server Actions & Route Handlers | RESTful API, Streaming 지원, 로직 처리 | CON-01 |
 | **Validation Engine** | JavaScript/TypeScript | 입력 유효성 검증, 불성실 패턴 탐지 | — |
-| **Cost Monitor** | TypeScript | Gemini API 비용 추적 *(MVP: Google AI Studio 수동 모니터링, Phase 2: 자동 차단)* | CON-03 ($100 하드캡) |
+| **Cost Monitor** | TypeScript | Gemini API 비용 추적 및 자동 차단 | CON-03 ($100 하드캡) |
 | **Data Access** | Prisma ORM | DB 추상화, 타입 안전 타입 제공 | CON-08 |
 | **AI Engine** | Google Gemini API + Vercel AI SDK | AI 텍스트 생성 (진단, 브리프, 카피) | CON-05 (1M 토큰) |
 | **Database** | PostgreSQL (Supabase) / SQLite | 데이터 영속화 | CON-02 |
@@ -516,7 +516,6 @@ classDiagram
     }
 
     class CostMonitor {
-        <<Phase 2>>
         +Float dailyCost
         +Float monthlyCost
         +Float monthlyHardCap
@@ -718,7 +717,7 @@ classDiagram
 | **REQ-NF-024** | 서비스 완료 후 3개월 내 고객 1인당 B2B 수주 건수가 2건 이상이어야 한다. | ≥ 2건 (고문 자문 1건 + 특강 1건 이상) | 고객 월말 자가 보고 설문(Typeform) + 탤런트뱅크/리멤버 프로필 조회수 스크린샷. Supabase `projects.outcome_count` | 북극성 KPI |
 | **REQ-NF-025** | Option B(880만 원) 전환율은 월간 10% 이상이어야 한다. | (월간 Option B 결제 건수 / 월간 진단 완료 리드 수) × 100 ≥ 10% | Supabase `clients` + `diagnoses` 조인 쿼리 | 보조 KPI 2 |
 | **REQ-NF-026** | 고객 만족도(NPS)는 프로젝트 종료 시 70 이상이어야 한다. | NPS ≥ 70 | Typeform NPS 설문 (납품 완료 후 7일 내 자동 발송). %추천자 − %비추천자 | 보조 KPI 3 |
-| **REQ-NF-027** | AI 진단 리포트 CTA 클릭율은 주간 10% 이상이어야 한다. | MVP: (GA4 `cta_click` / GA4 `page_view`) × 100 ≥ 10%. *(Phase 2: 분모를 `report_scroll_complete`로 교체)* | GA4 탐색 보고서 주간 추출 | 보조 KPI 5 |
+| **REQ-NF-027** | AI 진단 리포트 완독 → CTA 클릭율은 주간 10% 이상이어야 한다. | (GA4 `cta_click` / GA4 `report_scroll_complete`) × 100 ≥ 10% | GA4 탐색 보고서 주간 추출 | 보조 KPI 5 |
 | **REQ-NF-028** | 월간 신규 진단 리드 수는 50명 이상이어야 한다. | ≥ 50명/월 | Supabase `leads.created_at` 월별 COUNT + GA4 유입 채널별 소스 분석 | 보조 KPI 6 |
 
 ---
@@ -1115,7 +1114,7 @@ sequenceDiagram
     end
 ```
 
-#### 6.3.3 비용 자동 차단 플로우 *(Phase 2 — MVP에서는 Google AI Studio Dashboard 수동 모니터링)*
+#### 6.3.3 비용 자동 차단 플로우
 
 ```mermaid
 sequenceDiagram

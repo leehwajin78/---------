@@ -21,10 +21,10 @@
 
 | # | Pain | 현재 기준선 | 근거 |
 | :---: | :--- | :--- | :--- |
-| P1 | 경력 언어화 실패 — 직함은 있으나 ROI 기반 가치 제안 문장 부재 | B2B 제안서 완성률 ≤ 5% | JTBD 인터뷰 (REF-10) |
-| P2 | 자산 분산·신뢰 저하 — 프로필·제안서·SNS 파편화 | B2B 플랫폼 프로필 조회수 0건/월, 컨택 전환율 0% | JTBD 인터뷰 (REF-10) |
-| P3 | 실행 진입 장벽 — 디지털 도구 조작 거부 (체면·디지털 피로) | 서비스 자체 진행 시도율 < 10%, 외주 만족도 2.0/5.0 | JTBD 인터뷰 (REF-10) |
-| P4 | 기존 대안 구조적 한계 — 전직 지원·코칭·매칭 플랫폼 이탈 | 기존 서비스 이용 후 B2B 수주 성공률 < 3%, 재구매율 < 15% | 경쟁사 20+社 분석 (REF-01) |
+| P1 | 경력 언어화 실패 — 직함은 있으나 ROI 기반 가치 제안 문장 부재 | B2B 제안서 완성률 ≤ 5% | PRD §1-1 JTBD 인터뷰 시뮬레이션 |
+| P2 | 자산 분산·신뢰 저하 — 프로필·제안서·SNS 파편화 | B2B 플랫폼 프로필 조회수 0건/월, 컨택 전환율 0% | PRD §1-1 JTBD 인터뷰 시뮬레이션 |
+| P3 | 실행 진입 장벽 — 디지털 도구 조작 거부 (체면·디지털 피로) | 서비스 자체 진행 시도율 < 10%, 외주 만족도 2.0/5.0 | PRD §1-1 JTBD 인터뷰 시뮬레이션 |
+| P4 | 기존 대안 구조적 한계 — 전직 지원·코칭·매칭 플랫폼 이탈 | 기존 서비스 이용 후 B2B 수주 성공률 < 3%, 재구매율 < 15% | PRD §1-1 경쟁사 20+社 분석 결과 |
 
 **본 문서의 독자:** 개발자(1인 바이브코딩), 운영자(대표), 디자인 에이전시, 이해관계자 리뷰어.
 
@@ -80,7 +80,7 @@
 | **AOS** | Adjusted Opportunity Score — 조정된 기회 점수. 가중 중요도 × (2 × 중요도 − 만족도) |
 | **DOS** | Discovered Opportunity Score — 탐색된 기회 점수. 질적 인터뷰 기반 미충족 니즈 강도 |
 | **마스터 브리프** | 42문항 인터뷰 데이터를 AI가 구조화한 15페이지 분량의 핵심 전략 문서 (가치선언문, 타깃, 포지셔닝, 강의 주제 포함) |
-| **에셋 12종** | 마스터 브리프 기반으로 제작되는 B2B 산출물 세트 (제안서, 강의안 50장, 프로필, 소개서 등) |
+| **에셋 12종** | 마스터 브리프 기반으로 제작되는 **브랜드 에셋 8종**(브랜드 로고, 브랜드 철학, 브랜드 슬로건, 키컬러, 명함, 커스텀 SNS 디자인, 브랜드 포토, 브랜드 스타일 영상)과 **B2B 산출물 4종**(제안서, 강의안 50장, 소개서, 프로필)으로 구성된 통합 납품 패키지 |
 | **Done-for-you** | 고객이 인터뷰 구술만 참여하고, 나머지 전체 과정을 서비스가 100% 대행하는 모델 |
 | **바이브코딩** | AI 도구를 활용한 1인 개발 방식 |
 | **Validator** | PRD 내 주장의 타당성을 검증하는 실험 설계 및 측정 방법 |
@@ -94,20 +94,22 @@
 
 ### 1.4 References
 
-| ID | 문서명 | 파일 / 출처 |
+> 본 SRS의 유일한 비즈니스/기능 요구 원천은 **PRD v0.2** (`PRD__v1.0.md`)이다. 아래 표는 PRD 내에 직접 포함·인용된 근거 데이터의 출처를 PRD 섹션 기준으로 정리한 것이며, 별도 외부 파일을 참조하지 않는다.
+
+| ID | 근거 내용 | PRD 내 반영 위치 |
 | :--- | :--- | :--- |
-| REF-01 | 경쟁사 분석 (5개 시장 20+社) | `1_competents-analysis.md` |
-| REF-02 | Porter's 5 Forces (5개 시장) | `2_porters-foreces.md` |
-| REF-03 | 가치사슬 분석 (10+社) | `3_value-chain.md` |
-| REF-04 | KSF 보고서 (5개 시장 25개) | `4_ksf-report.md` |
-| REF-05 | 문제정의서 (3개 시장 9개 관점) | `5_problem-definition.md` |
-| REF-06 | TAM-SAM-SOM + Segment Map | `6_TAM-SAM-SOM+MarketSegmentMap.md` |
-| REF-07 | 페르소나 스펙트럼 (12종) | `7_persona-spectrum-map.md` |
-| REF-08 | 고객 여정 지도 (CJM) | `8_customer-journey-map.md` |
-| REF-09 | AOS-DOS 기회점수 분석 | `9_aos-dos-analysis.md` |
-| REF-10 | JTBD 인터뷰 보고서 | `10_jtbd-interview-report.md` |
-| REF-11 | Value Proposition Sheet V2 | `Value Proposition Sheet_2026.md` |
-| REF-12 | PRD v0.2 (본 SRS의 원천) | `PRD__v1.0.md` |
+| REF-01 | 경쟁사 분석 결과 (5개 시장 20+社) — 기존 대안의 구조적 한계, 수주 성공률 < 3% | PRD §1-1 Pain P4, §4 차별 가치 근거, §7 리스크 |
+| REF-02 | Porter's 5 Forces 분석 (5개 시장) — 진입 장벽 및 경쟁 구조 | PRD §4 기능 요구사항 근거 |
+| REF-03 | 가치사슬 분석 (10+社) — 서비스 차별화 포인트 도출 | PRD §4, §8 벤치마크 |
+| REF-04 | KSF 보고서 (5개 시장 25개 성공 요인) — MoSCoW 우선순위 근거 | PRD §4 MoSCoW 근거 |
+| REF-05 | 문제정의서 (3개 시장 9개 관점) — P1~P4 Pain 수치 근거 | PRD §1-1 문제 정의 |
+| REF-06 | TAM-SAM-SOM 시장 규모 추정 — SOM 1,300억 원, 880만 원 객단가 근거 | PRD §1 시장 규모, §7 가정 (ASM-01) |
+| REF-07 | 페르소나 스펙트럼 (12종) — AOS-DOS 사분면 기반 5인 Core/Adj 타깃 | PRD §2-1 페르소나 요약 |
+| REF-08 | 고객 여정 지도 (CJM) — 문제 인식→탐색→의사결정→사용→유지 여정 | PRD §2-2 고객 여정 맵 |
+| REF-09 | AOS-DOS 기회점수 분석 — Q1 High AOS/High DOS 우선순위 설정 | PRD §2-1 페르소나 우선순위 |
+| REF-10 | JTBD 인터뷰 시뮬레이션 — "석 달째 빈 화면", "크몽 외주 속 빈 강정" 등 실제 고객 인용 | PRD §1-1 Pain 지표, §3 스토리, §9 근거 |
+| REF-11 | Value Proposition Sheet V2 — Done-for-you 모델 정의, 수익 구조, AI 자동화 전략 | PRD 전체의 원천 전략 문서 (PRD §9-2 #11) |
+| REF-12 | **PRD v0.2 (본 SRS의 유일한 원천)** | `PRD__v1.0.md` — 본 문서 |
 | REF-13 | ISO/IEC/IEEE 29148:2018 | International Standard |
 
 ---
@@ -131,14 +133,14 @@
 
 ### 3.1 External Systems
 
-| # | 외부 시스템 | 역할 | 통신 프로토콜 | 제약 |
-| :---: | :--- | :--- | :--- | :--- |
-| EXT-01 | **Anthropic Claude API** | AI 마스터 브리프 생성, 브랜드 진단 리포트 생성 | HTTPS (TLS 1.3) | Rate: 50 req/min, Context: 200K tokens, Cost: ~$0.015/1K tokens |
-| EXT-02 | **Supabase** | 리드 DB, 프로젝트 데이터 저장, RLS 기반 접근 제어 | HTTPS (REST API) | Free 티어: 500MB DB, 1GB Storage, 50K MAU |
-| EXT-03 | **Vercel** | 호스팅, Serverless Functions, Edge CDN | HTTPS | Hobby: 실행 시간 ≤ 60초, 메모리 1024MB |
-| EXT-04 | **Google Analytics 4** | 페이지뷰·이벤트 트래킹, 전환 분석 | HTTPS (gtag.js) | GDPR 동의 배너 필요 |
-| EXT-05 | **Typeform** | NPS 설문, 월말 고객 자가 보고 | HTTPS (Webhook) | 무료 플랜 제약 내 |
-| EXT-06 | **Slack** | 운영 알림 (오류, 비용, 리드 적재 실패) | HTTPS (Webhook) | Incoming Webhook |
+| # | 외부 시스템 | 역할 | 통신 프로토콜 | 제약 | 장애 시 임시 우회 전략 |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| EXT-01 | **Anthropic Claude API** | AI 마스터 브리프 생성, 브랜드 진단 리포트 생성 | HTTPS (TLS 1.3) | Rate: 50 req/min, Context: 200K tokens, Cost: ~$0.015/1K tokens | Supabase에 사전 캐싱된 **샘플 진단 리포트 템플릿**(업종별 3종) 반환 + Fallback 메시지 출력. 브리프 생성은 수동 대응 (SLA 4시간). |
+| EXT-02 | **Supabase** | 리드 DB, 프로젝트 데이터 저장, RLS 기반 접근 제어 | HTTPS (REST API) | Free 티어: 500MB DB, 1GB Storage, 50K MAU | 로컬 JSON 파일 기반 **임시 리드 저장소**에 기록 후, Supabase 복구 시 일괄 동기화 (Batch Sync). 관리자 콘솔에 "오프라인 모드" 표시. |
+| EXT-03 | **Vercel** | 호스팅, Serverless Functions, Edge CDN | HTTPS | Hobby: 실행 시간 ≤ 60초, 메모리 1024MB | Vercel 전체 장애 시 대응 불가 (호스팅 의존). 장애 감지 → Slack 알림 + 고객 안내 메일 발송. 사전에 **정적 HTML 랜딩페이지** 백업본을 별도 스토리지에 준비. |
+| EXT-04 | **Google Analytics 4** | 페이지뷰·이벤트 트래킹, 전환 분석 | HTTPS (gtag.js) | GDPR 동의 배너 필요 | GA4 장애 시 **Supabase `event_logs` 테이블**에 이벤트(page_view, cta_click 등)를 직접 기록하여 전환 데이터 보존. GA4 복구 후 수동 대조. |
+| EXT-05 | **Typeform** | NPS 설문, 월말 고객 자가 보고 | HTTPS (Webhook) | 무료 플랜 제약 내 | Typeform 장애 시 **Google Forms 대체 설문 링크** 사전 준비. 수집 데이터는 운영자가 수동으로 Supabase에 입력. |
+| EXT-06 | **Slack** | 운영 알림 (오류, 비용, 리드 적재 실패) | HTTPS (Webhook) | Incoming Webhook | Slack 장애 시 **운영자 이메일(대표 개인 메일)**로 동일 알림 자동 발송. Vercel Functions 내 이메일 Fallback 로직 사전 구현. |
 
 ### 3.2 Client Applications
 
